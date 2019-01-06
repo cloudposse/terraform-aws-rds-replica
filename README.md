@@ -41,7 +41,7 @@ We literally have [*hundreds of terraform modules*][terraform_modules] that are 
 
 ## Introduction
 
-The module will create:
+The module will create an RDS replica instance:
 
 * DB instance (MySQL, Postgres, SQL Server, Oracle)
 * DB Parameter Group

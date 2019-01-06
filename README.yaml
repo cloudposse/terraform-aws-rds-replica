@@ -59,7 +59,7 @@ description: |-
   Terraform module to provision AWS [`RDS`](https://aws.amazon.com/rds/) replica instances. These are best suited for reporting purposes.
 
 introduction: |-
-  The module will create:
+  The module will create an RDS replica instance:
 
   * DB instance (MySQL, Postgres, SQL Server, Oracle)
   * DB Parameter Group
