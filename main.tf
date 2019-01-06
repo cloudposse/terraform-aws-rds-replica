@@ -104,11 +104,10 @@ resource "aws_security_group_rule" "allow_egress" {
 
 module "dns_host_name" {
   source    = "git::https://github.com/cloudposse/terraform-aws-route53-cluster-hostname.git?ref=tags/0.2.5"
-  enabled   = "${var.enabled}"
+  enabled   = "${local.enabled && length(var.dns_zone_id) > 0 ? "true" : "false"}"
   namespace = "${var.namespace}"
   name      = "${var.host_name}"
   stage     = "${var.stage}"
   zone_id   = "${var.dns_zone_id}"
   records   = "${aws_db_instance.default.*.address}"
-  enabled   = "${local.enabled && length(var.dns_zone_id) > 0 ? "true" : "false"}"
 }

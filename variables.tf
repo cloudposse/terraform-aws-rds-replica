@@ -33,7 +33,7 @@ variable "host_name" {
 variable "security_group_ids" {
   type        = "list"
   default     = []
-  description = "he IDs of the security groups from which to allow `ingress` traffic to the DB instance"
+  description = "The IDs of the security groups from which to allow `ingress` traffic to the DB instance"
 }
 
 variable "database_port" {
