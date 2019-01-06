@@ -8,6 +8,8 @@
 
 Terraform module to provision AWS [`RDS`](https://aws.amazon.com/rds/) replica instances. These are best suited for reporting purposes.
 
+**IMPORTANT** It is not possible to create a read replica for a DB Instance that belongs to a DB Cluster.
+
 
 ---
 
@@ -141,7 +143,6 @@ Available targets:
 | instance_address | Address of the instance |
 | instance_endpoint | DNS Endpoint of the instance |
 | instance_id | ID of the instance |
-| parameter_group_id | ID of the Parameter Group |
 | security_group_id | ID of the Security Group |
 | subnet_group_id | ID of the Subnet Group |
 

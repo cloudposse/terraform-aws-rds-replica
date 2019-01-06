@@ -45,7 +45,6 @@
 | instance_address | Address of the instance |
 | instance_endpoint | DNS Endpoint of the instance |
 | instance_id | ID of the instance |
-| parameter_group_id | ID of the Parameter Group |
 | security_group_id | ID of the Security Group |
 | subnet_group_id | ID of the Subnet Group |
 
