@@ -63,14 +63,6 @@ resource "aws_db_instance" "default" {
   replicate_source_db         = "${var.replicate_source_db}"
 }
 
-resource "aws_db_parameter_group" "default" {
-  count     = "${local.enabled && (length(var.parameter_group_name) == 0) ? 1 : 0}"
-  name      = "${module.label.id}"
-  family    = "${var.db_parameter_group}"
-  tags      = "${module.label.tags}"
-  parameter = "${var.db_parameter}"
-}
-
 resource "aws_db_subnet_group" "default" {
   count      = "${local.enabled ? 1 : 0}"
   name       = "${module.label.id}"

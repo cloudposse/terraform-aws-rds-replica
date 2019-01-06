@@ -43,10 +43,9 @@ We literally have [*hundreds of terraform modules*][terraform_modules] that are 
 
 The module will create an RDS replica instance:
 
-* DB instance (MySQL, Postgres, SQL Server, Oracle)
-* DB Parameter Group
-* DB Subnet Group
-* DB Security Group
+* RDS Replica instance (MySQL, Postgres, SQL Server, Oracle)
+* RDS Subnet Group
+* RDS DB Security Group
 * DNS Record in Route53 for the DB endpoint
 
 ## Usage

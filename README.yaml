@@ -61,12 +61,10 @@ description: |-
 introduction: |-
   The module will create an RDS replica instance:
 
-  * DB instance (MySQL, Postgres, SQL Server, Oracle)
-  * DB Parameter Group
-  * DB Subnet Group
-  * DB Security Group
+  * RDS Replica instance (MySQL, Postgres, SQL Server, Oracle)
+  * RDS Subnet Group
+  * RDS DB Security Group
   * DNS Record in Route53 for the DB endpoint
-
 
 # How to use this project
 usage: |-
