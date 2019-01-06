@@ -22,7 +22,6 @@ module "final_snapshot_label" {
 
 locals {
   enabled                   = "${var.enabled == "true"}"
-  parameter_group_name      = "${length(var.parameter_group_name) > 0 ? var.parameter_group_name : join("", aws_db_parameter_group.default.*.name)}"
   final_snapshot_identifier = "${length(var.final_snapshot_identifier) > 0 ? var.final_snapshot_identifier : module.final_snapshot_label.id}"
   kms_key_id                = "${length(var.kms_key_id) > 0 ? var.kms_key_id : join("", aws_kms_key.default.*.id)}"
 }
@@ -38,7 +37,6 @@ resource "aws_kms_key" "default" {
 resource "aws_db_instance" "default" {
   count                       = "${local.enabled ? 1 : 0}"
   identifier                  = "${module.label.id}"
-  name                        = "${var.database_name}"
   port                        = "${var.database_port}"
   instance_class              = "${var.instance_class}"
   storage_encrypted           = "${var.storage_encrypted}"
