@@ -2,7 +2,6 @@
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| allocated_storage | The allocated storage in GBs | string | `` | no |
 | allow_major_version_upgrade | Allow major version upgrade | string | `false` | no |
 | apply_immediately | Specifies whether any database modifications are applied immediately, or during the next maintenance window | string | `false` | no |
 | attributes | Additional attributes (e.g. `1`) | list | `<list>` | no |
@@ -10,17 +9,11 @@
 | backup_retention_period | Backup retention period in days. Must be > 0 to enable backups | string | `0` | no |
 | backup_window | When AWS can perform DB snapshots, can't overlap with maintenance window | string | `22:00-03:00` | no |
 | copy_tags_to_snapshot | Copy tags from DB to a snapshot | string | `true` | no |
-| database_name | The name of the database to create when the DB instance is created | string | `` | no |
-| database_password | (Required unless a snapshot_identifier or replicate_source_db is provided) Password for the master DB user | string | `` | no |
 | database_port | Database port (_e.g._ `3306` for `MySQL`). Used in the DB Security Group to allow access to the DB instance from the provided `security_group_ids` | string | - | yes |
-| database_user | (Required unless a `snapshot_identifier` or `replicate_source_db` is provided) Username for the master DB user | string | `` | no |
 | db_parameter | A list of DB parameters to apply. Note that parameters may differ from a DB family to another | list | `<list>` | no |
-| db_parameter_group | Parameter group, depends on DB engine used | string | `` | no |
 | delimiter | Delimiter to be used between `name`, `namespace`, `stage` and `attributes` | string | `-` | no |
 | dns_zone_id | The ID of the DNS Zone in Route53 where a new DNS record will be created for the DB host name | string | `` | no |
 | enabled | Set to false to prevent the module from creating any resources | string | `true` | no |
-| engine | Database engine type | string | `` | no |
-| engine_version | Database engine version, depends on engine type | string | `` | no |
 | final_snapshot_identifier | Final snapshot identifier e.g.: some-db-final-snapshot-2015-06-26-06-05 | string | `` | no |
 | host_name | The DB host name created in Route53 | string | `db` | no |
 | instance_class | Class of RDS instance | string | - | yes |
@@ -33,7 +26,7 @@
 | namespace | Namespace (e.g. `eg` or `cp`) | string | - | yes |
 | parameter_group_name | Name of the DB parameter group to associate | string | `` | no |
 | publicly_accessible | Determines if database can be publicly available (NOT recommended) | string | `false` | no |
-| replicate_source_db | Specifies that this resource is a Replicate database, and to use this value as the source database. This correlates to the identifier of another Amazon RDS Database to replicate. Note that if you are creating a cross-region replica of an encrypted database you will also need to specify a kms_key_id. See [DB Instance Replication](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Replication.html) and [Working with PostgreSQL and MySQL Read Replicas](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html) for more information on using Replication. | string | `` | no |
+| replicate_source_db | Specifies that this resource is a Replicate database, and to use this value as the source database. This correlates to the identifier of another Amazon RDS Database to replicate. Note that if you are creating a cross-region replica of an encrypted database you will also need to specify a kms_key_id. See [DB Instance Replication](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Replication.html) and [Working with PostgreSQL and MySQL Read Replicas](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html) for more information on using Replication. | string | - | yes |
 | security_group_ids | he IDs of the security groups from which to allow `ingress` traffic to the DB instance | list | `<list>` | no |
 | skip_final_snapshot | If true (default), no snapshot will be made before deleting DB | string | `true` | no |
 | snapshot_identifier | Snapshot identifier e.g: rds:production-2015-06-26-06-05. If specified, the module create cluster from the snapshot | string | `` | no |

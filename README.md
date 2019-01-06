@@ -52,44 +52,31 @@ The module will create:
 ## Usage
 
 ```hcl
-module "rds_instance" {
-      source                      = "git::https://github.com/cloudposse/terraform-aws-rds.git?ref=master"
-      namespace                   = "eg"
-      stage                       = "prod"
-      name                        = "app"
-      dns_zone_id                 = "Z89FN1IW975KPE"
-      host_name                   = "db"
-      security_group_ids          = ["sg-xxxxxxxx"]
-      database_name               = "wordpress"
-      database_user               = "admin"
-      database_password           = "xxxxxxxxxxxx"
-      database_port               = 3306
-      multi_az                    = "true"
-      storage_type                = "gp2"
-      allocated_storage           = "100"
-      storage_encrypted           = "true"
-      engine                      = "mysql"
-      engine_version              = "5.7.17"
-      instance_class              = "db.t2.medium"
-      db_parameter_group          = "mysql5.6"
-      parameter_group_name        = "mysql-5-6"
-      publicly_accessible         = "false"
-      subnet_ids                  = ["sb-xxxxxxxxx", "sb-xxxxxxxxx"]
-      vpc_id                      = "vpc-xxxxxxxx"
-      snapshot_identifier         = "rds:production-2015-06-26-06-05"
-      auto_minor_version_upgrade  = "true"
-      allow_major_version_upgrade = "false"
-      apply_immediately           = "false"
-      maintenance_window          = "Mon:03:00-Mon:04:00"
-      skip_final_snapshot         = "false"
-      copy_tags_to_snapshot       = "true"
-      backup_retention_period     = 7
-      backup_window               = "22:00-03:00"
-
-      db_parameter                = [
-        { name  = "myisam_sort_buffer_size"   value = "1048576" },
-        { name  = "sort_buffer_size"          value = "2097152" },
-      ]
+module "rds_replica" {
+  source                      = "git::https://github.com/cloudposse/terraform-aws-rds-replica.git?ref=master"
+  namespace                   = "eg"
+  stage                       = "prod"
+  name                        = "reporting"
+  replicate_source_db         = "eg-prod-db
+  dns_zone_id                 = "Z89FN1IW975KPE"
+  host_name                   = "reporting"
+  security_group_ids          = ["sg-xxxxxxxx"]
+  database_port               = 3306
+  multi_az                    = "true"
+  storage_type                = "gp2"
+  storage_encrypted           = "true"
+  instance_class              = "db.t2.medium"
+  publicly_accessible         = "false"
+  subnet_ids                  = ["sb-xxxxxxxxx", "sb-xxxxxxxxx"]
+  vpc_id                      = "vpc-xxxxxxxx"
+  auto_minor_version_upgrade  = "true"
+  allow_major_version_upgrade = "false"
+  apply_immediately           = "false"
+  maintenance_window          = "Mon:03:00-Mon:04:00"
+  skip_final_snapshot         = "false"
+  copy_tags_to_snapshot       = "true"
+  backup_retention_period     = 7
+  backup_window               = "22:00-03:00"
 }
 ```
 
@@ -112,7 +99,6 @@ Available targets:
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| allocated_storage | The allocated storage in GBs | string | `` | no |
 | allow_major_version_upgrade | Allow major version upgrade | string | `false` | no |
 | apply_immediately | Specifies whether any database modifications are applied immediately, or during the next maintenance window | string | `false` | no |
 | attributes | Additional attributes (e.g. `1`) | list | `<list>` | no |
@@ -120,17 +106,11 @@ Available targets:
 | backup_retention_period | Backup retention period in days. Must be > 0 to enable backups | string | `0` | no |
 | backup_window | When AWS can perform DB snapshots, can't overlap with maintenance window | string | `22:00-03:00` | no |
 | copy_tags_to_snapshot | Copy tags from DB to a snapshot | string | `true` | no |
-| database_name | The name of the database to create when the DB instance is created | string | `` | no |
-| database_password | (Required unless a snapshot_identifier or replicate_source_db is provided) Password for the master DB user | string | `` | no |
 | database_port | Database port (_e.g._ `3306` for `MySQL`). Used in the DB Security Group to allow access to the DB instance from the provided `security_group_ids` | string | - | yes |
-| database_user | (Required unless a `snapshot_identifier` or `replicate_source_db` is provided) Username for the master DB user | string | `` | no |
 | db_parameter | A list of DB parameters to apply. Note that parameters may differ from a DB family to another | list | `<list>` | no |
-| db_parameter_group | Parameter group, depends on DB engine used | string | `` | no |
 | delimiter | Delimiter to be used between `name`, `namespace`, `stage` and `attributes` | string | `-` | no |
 | dns_zone_id | The ID of the DNS Zone in Route53 where a new DNS record will be created for the DB host name | string | `` | no |
 | enabled | Set to false to prevent the module from creating any resources | string | `true` | no |
-| engine | Database engine type | string | `` | no |
-| engine_version | Database engine version, depends on engine type | string | `` | no |
 | final_snapshot_identifier | Final snapshot identifier e.g.: some-db-final-snapshot-2015-06-26-06-05 | string | `` | no |
 | host_name | The DB host name created in Route53 | string | `db` | no |
 | instance_class | Class of RDS instance | string | - | yes |
@@ -143,7 +123,7 @@ Available targets:
 | namespace | Namespace (e.g. `eg` or `cp`) | string | - | yes |
 | parameter_group_name | Name of the DB parameter group to associate | string | `` | no |
 | publicly_accessible | Determines if database can be publicly available (NOT recommended) | string | `false` | no |
-| replicate_source_db | Specifies that this resource is a Replicate database, and to use this value as the source database. This correlates to the identifier of another Amazon RDS Database to replicate. Note that if you are creating a cross-region replica of an encrypted database you will also need to specify a kms_key_id. See [DB Instance Replication](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Replication.html) and [Working with PostgreSQL and MySQL Read Replicas](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html) for more information on using Replication. | string | `` | no |
+| replicate_source_db | Specifies that this resource is a Replicate database, and to use this value as the source database. This correlates to the identifier of another Amazon RDS Database to replicate. Note that if you are creating a cross-region replica of an encrypted database you will also need to specify a kms_key_id. See [DB Instance Replication](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Replication.html) and [Working with PostgreSQL and MySQL Read Replicas](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html) for more information on using Replication. | string | - | yes |
 | security_group_ids | he IDs of the security groups from which to allow `ingress` traffic to the DB instance | list | `<list>` | no |
 | skip_final_snapshot | If true (default), no snapshot will be made before deleting DB | string | `true` | no |
 | snapshot_identifier | Snapshot identifier e.g: rds:production-2015-06-26-06-05. If specified, the module create cluster from the snapshot | string | `` | no |
@@ -303,21 +283,13 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
 
 ### Contributors
 
-|  [![Erik Osterman][osterman_avatar]][osterman_homepage]<br/>[Erik Osterman][osterman_homepage] | [![Andriy Knysh][aknysh_avatar]][aknysh_homepage]<br/>[Andriy Knysh][aknysh_homepage] | [![Sergey Vasilyev][s2504s_avatar]][s2504s_homepage]<br/>[Sergey Vasilyev][s2504s_homepage] | [![Valeriy][drama17_avatar]][drama17_homepage]<br/>[Valeriy][drama17_homepage] | [![Konstantin B][comeanother_avatar]][comeanother_homepage]<br/>[Konstantin B][comeanother_homepage] | [![drmikecrowe][drmikecrowe_avatar]][drmikecrowe_homepage]<br/>[drmikecrowe][drmikecrowe_homepage] |
-|---|---|---|---|---|---|
+|  [![Erik Osterman][osterman_avatar]][osterman_homepage]<br/>[Erik Osterman][osterman_homepage] | [![Andriy Knysh][aknysh_avatar]][aknysh_homepage]<br/>[Andriy Knysh][aknysh_homepage] |
+|---|---|
 
   [osterman_homepage]: https://github.com/osterman
   [osterman_avatar]: https://github.com/osterman.png?size=150
   [aknysh_homepage]: https://github.com/aknysh
   [aknysh_avatar]: https://github.com/aknysh.png?size=150
-  [s2504s_homepage]: https://github.com/s2504s
-  [s2504s_avatar]: https://github.com/s2504s.png?size=150
-  [drama17_homepage]: https://github.com/drama17
-  [drama17_avatar]: https://github.com/drama17.png?size=150
-  [comeanother_homepage]: https://github.com/comeanother
-  [comeanother_avatar]: https://github.com/comeanother.png?size=150
-  [drmikecrowe_homepage]: https://github.com/drmikecrowe
-  [drmikecrowe_avatar]: https://github.com/drmikecrowe.png?size=150
 
 
 
