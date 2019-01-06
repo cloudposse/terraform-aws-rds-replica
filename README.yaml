@@ -58,7 +58,7 @@ related:
 description: |-
   Terraform module to provision AWS [`RDS`](https://aws.amazon.com/rds/) replica instances. These are best suited for reporting purposes.
 
-  **IMPORTANT** It is not possible to create a read replica for a DB Instance that belongs to a DB Cluster.
+  **IMPORTANT** It is not possible to create a read replica for a DB Instance that belongs to an Aurora DB Cluster.
 
 introduction: |-
   The module will create an RDS replica instance:
@@ -86,7 +86,7 @@ usage: |-
     storage_encrypted           = "true"
     instance_class              = "db.t2.medium"
     publicly_accessible         = "false"
-    subnet_ids                  = ["sb-xxxxxxxxx", "sb-xxxxxxxxx"]
+    subnet_ids                  = ["subnet-xxxxxxxxx", "subnet-xxxxxxxxx"]
     vpc_id                      = "vpc-xxxxxxxx"
     auto_minor_version_upgrade  = "true"
     allow_major_version_upgrade = "false"
