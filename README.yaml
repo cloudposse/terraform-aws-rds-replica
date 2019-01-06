@@ -86,7 +86,7 @@ usage: |-
     storage_encrypted           = "true"
     instance_class              = "db.t2.medium"
     publicly_accessible         = "false"
-    subnet_ids                  = ["sb-xxxxxxxxx", "sb-xxxxxxxxx"]
+    subnet_ids                  = ["subnet-xxxxxxxxx", "subnet-xxxxxxxxx"]
     vpc_id                      = "vpc-xxxxxxxx"
     auto_minor_version_upgrade  = "true"
     allow_major_version_upgrade = "false"
