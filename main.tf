@@ -20,18 +20,18 @@ module "final_snapshot_label" {
   tags       = "${var.tags}"
 }
 
-locals {
-  enabled                   = "${var.enabled == "true"}"
-  final_snapshot_identifier = "${length(var.final_snapshot_identifier) > 0 ? var.final_snapshot_identifier : module.final_snapshot_label.id}"
-  kms_key_id                = "${length(var.kms_key_id) > 0 ? var.kms_key_id : join("", aws_kms_key.default.*.id)}"
-}
-
 resource "aws_kms_key" "default" {
   count                   = "${local.enabled && length(var.kms_key_id) == 0 ? 1 : 0}"
   description             = "${module.label.id}"
   deletion_window_in_days = 10
   enable_key_rotation     = true
   tags                    = "${module.label.tags}"
+}
+
+locals {
+  enabled                   = "${var.enabled == "true"}"
+  final_snapshot_identifier = "${length(var.final_snapshot_identifier) > 0 ? var.final_snapshot_identifier : module.final_snapshot_label.id}"
+  kms_key_id                = "${length(var.kms_key_id) > 0 ? var.kms_key_id : join("", aws_kms_key.default.*.arn)}"
 }
 
 resource "aws_db_instance" "default" {
