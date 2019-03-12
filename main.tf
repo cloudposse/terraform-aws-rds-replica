@@ -21,7 +21,7 @@ module "final_snapshot_label" {
 }
 
 resource "aws_kms_key" "default" {
-  count                   = "${local.enabled && length(var.kms_key_id) == 0 ? 1 : 0}"
+  count                   = "${local.enabled && length(var.kms_key_id) == 0 && !var.same_region ? 1 : 0}"
   description             = "${module.label.id}"
   deletion_window_in_days = 10
   enable_key_rotation     = true
@@ -63,7 +63,7 @@ resource "aws_db_instance" "default" {
 }
 
 resource "aws_db_subnet_group" "default" {
-  count      = "${local.enabled ? 1 : 0}"
+  count      = "${local.enabled && !var.same_region ? 1 : 0}"
   name       = "${module.label.id}"
   subnet_ids = ["${var.subnet_ids}"]
   tags       = "${module.label.tags}"
