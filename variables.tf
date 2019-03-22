@@ -192,5 +192,5 @@ variable "monitoring_interval" {
 
 variable "same_region" {
   description = "Whether this replica is in the same region as the master."
-  default = "false"
+  default     = "false"
 }
