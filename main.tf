@@ -31,7 +31,7 @@ resource "aws_kms_key" "default" {
 locals {
   enabled                   = var.enabled == "true"
   final_snapshot_identifier = length(var.final_snapshot_identifier) > 0 ? var.final_snapshot_identifier : module.final_snapshot_label.id
-  kms_key_id                = length(var.kms_key_id) > 0 ? var.kms_key_id : join("", aws_kms_key.default.*.arn)
+  kms_key_id                = length(var.kms_key_id) > 0 || var.same_region == "true" ? var.kms_key_id : join("", aws_kms_key.default.*.arn)
 }
 
 resource "aws_db_instance" "default" {
