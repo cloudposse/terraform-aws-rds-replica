@@ -109,18 +109,6 @@ variable "maintenance_window" {
   default     = "Mon:03:00-Mon:04:00"
 }
 
-variable "skip_final_snapshot" {
-  type        = string
-  description = "If true (default), no snapshot will be made before deleting DB"
-  default     = "true"
-}
-
-variable "copy_tags_to_snapshot" {
-  type        = string
-  description = "Copy tags from DB to a snapshot"
-  default     = "true"
-}
-
 variable "backup_retention_period" {
   description = "Backup retention period in days. Must be > 0 to enable backups"
   default     = 0
@@ -154,18 +142,6 @@ variable "db_parameter" {
   type        = list(string)
   default     = []
   description = "A list of DB parameters to apply. Note that parameters may differ from a DB family to another"
-}
-
-variable "snapshot_identifier" {
-  type        = string
-  description = "Snapshot identifier e.g: rds:production-2015-06-26-06-05. If specified, the module create cluster from the snapshot"
-  default     = ""
-}
-
-variable "final_snapshot_identifier" {
-  type        = string
-  description = "Final snapshot identifier e.g.: some-db-final-snapshot-2015-06-26-06-05"
-  default     = ""
 }
 
 variable "parameter_group_name" {
