@@ -19,7 +19,7 @@ resource "aws_kms_key" "default" {
 
 locals {
   enabled    = var.enabled == "true"
-  kms_key_id = length(var.kms_key_id) > 0 || var.same_region == "true" ? var.kms_key_id : join("", aws_kms_key.default.*.arn)
+  kms_key_id = length(var.kms_key_id) > 0 || var.kms_key_id == "" || var.same_region == "true" ? var.kms_key_id : join("", aws_kms_key.default.*.arn)
 }
 
 resource "aws_db_instance" "default" {
