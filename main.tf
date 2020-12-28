@@ -109,5 +109,5 @@ module "dns_host_name" {
   name      = "${var.host_name}"
   stage     = "${var.stage}"
   zone_id   = "${var.dns_zone_id}"
-  records   = ["${aws_db_instance.default.*.address}"]
+  records   = coalescelist(aws_db_instance.default.*.address, [""])
 }
