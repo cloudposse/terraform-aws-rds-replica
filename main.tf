@@ -65,7 +65,7 @@ resource "aws_db_instance" "default" {
 resource "aws_db_subnet_group" "default" {
   count      = "${local.enabled && var.same_region == "false" ? 1 : 0}"
   name       = "${module.label.id}"
-  subnet_ids = ["${var.subnet_ids}"]
+  subnet_ids = "${var.subnet_ids}"
   tags       = "${module.label.tags}"
 }
 
@@ -103,11 +103,11 @@ resource "aws_security_group_rule" "allow_egress" {
 }
 
 module "dns_host_name" {
-  source    = "git::https://github.com/cloudposse/terraform-aws-route53-cluster-hostname.git?ref=tags/0.2.5"
+  source    = "git::https://github.com/cloudposse/terraform-aws-route53-cluster-hostname.git?ref=tags/0.9.0"
   enabled   = "${local.enabled && length(var.dns_zone_id) > 0 ? "true" : "false"}"
   namespace = "${var.namespace}"
   name      = "${var.host_name}"
   stage     = "${var.stage}"
   zone_id   = "${var.dns_zone_id}"
-  records   = "${aws_db_instance.default.*.address}"
+  records   = aws_db_instance.default.*.address
 }
