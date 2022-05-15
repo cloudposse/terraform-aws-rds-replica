@@ -9,17 +9,6 @@ module "label" {
   tags       = var.tags
 }
 
-module "final_snapshot_label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.25.0"
-  enabled    = var.enabled
-  namespace  = var.namespace
-  name       = var.name
-  stage      = var.stage
-  delimiter  = var.delimiter
-  attributes = compact(concat(var.attributes, ["final", "snapshot"]))
-  tags       = var.tags
-}
-
 resource "aws_kms_key" "default" {
   count                   = local.enabled && length(var.kms_key_id) == 0 ? 1 : 0
   description             = module.label.id
@@ -29,9 +18,8 @@ resource "aws_kms_key" "default" {
 }
 
 locals {
-  enabled                   = var.enabled == "true"
-  final_snapshot_identifier = length(var.final_snapshot_identifier) > 0 ? var.final_snapshot_identifier : module.final_snapshot_label.id
-  kms_key_id                = length(var.kms_key_id) > 0 ? var.kms_key_id : join("", aws_kms_key.default.*.arn)
+  enabled    = var.enabled == "true"
+  kms_key_id = length(var.kms_key_id) > 0 ? var.kms_key_id : join("", aws_kms_key.default.*.arn)
 }
 
 resource "aws_db_instance" "default" {
@@ -41,29 +29,32 @@ resource "aws_db_instance" "default" {
   instance_class              = var.instance_class
   storage_encrypted           = var.storage_encrypted
   vpc_security_group_ids      = aws_security_group.default.*.id
-  db_subnet_group_name        = join("", aws_db_subnet_group.default.*.name)
+  db_subnet_group_name        = var.create_db_subnet_group ? join("", aws_db_subnet_group.default.*.name) : null
   multi_az                    = var.multi_az
   storage_type                = var.storage_type
   iops                        = var.iops
   publicly_accessible         = var.publicly_accessible
-  snapshot_identifier         = var.snapshot_identifier
+  snapshot_identifier         = length(var.snapshot_identifier) > 0 ? var.snapshot_identifier : null
   allow_major_version_upgrade = var.allow_major_version_upgrade
   auto_minor_version_upgrade  = var.auto_minor_version_upgrade
   apply_immediately           = var.apply_immediately
   maintenance_window          = var.maintenance_window
-  skip_final_snapshot         = var.skip_final_snapshot
-  copy_tags_to_snapshot       = var.copy_tags_to_snapshot
-  backup_retention_period     = var.backup_retention_period
-  backup_window               = var.backup_window
+  skip_final_snapshot         = true
+  backup_retention_period     = var.backup_retention_period > 0 ? var.backup_retention_period : null
+  backup_window               = var.backup_retention_period > 0 ? var.backup_window : null
   tags                        = module.label.tags
-  final_snapshot_identifier   = local.final_snapshot_identifier
-  kms_key_id                  = local.kms_key_id
+  kms_key_id                  = length(var.kms_key_id) > 0 ? local.kms_key_id : null
   monitoring_interval         = var.monitoring_interval
   replicate_source_db         = var.replicate_source_db
+  timeouts {
+    create = "3h"
+    delete = "2h"
+    update = "80m"
+  }
 }
 
 resource "aws_db_subnet_group" "default" {
-  count      = local.enabled && var.same_region == "false" ? 1 : 0
+  count      = local.enabled && var.create_db_subnet_group && var.same_region == "false" ? 1 : 0
   name       = module.label.id
   subnet_ids = var.subnet_ids
   tags       = module.label.tags
