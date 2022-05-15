@@ -76,9 +76,16 @@ variable "publicly_accessible" {
   default     = "false"
 }
 
+variable "create_db_subnet_group" {
+  type        = bool
+  description = "Whether to create and use a db subnet group"
+  default     = true
+}
+
 variable "subnet_ids" {
   description = "List of subnets for the DB"
   type        = list(string)
+  default     = []
 }
 
 variable "vpc_id" {
