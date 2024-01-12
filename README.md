@@ -110,7 +110,7 @@ module "rds_replica" {
   namespace                   = "eg"
   stage                       = "prod"
   name                        = "reporting"
-  replicate_source_db         = "eg-prod-db
+  replicate_source_db         = "eg-prod-db"
   dns_zone_id                 = "Z89FN1IW975KPE"
   host_name                   = "reporting"
   security_group_ids          = ["sg-xxxxxxxx"]
