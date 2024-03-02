@@ -13,7 +13,7 @@ No requirements.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_dns_host_name"></a> [dns\_host\_name](#module\_dns\_host\_name) | git::https://github.com/cloudposse/terraform-aws-route53-cluster-hostname.git | tags/0.2.5 |
+| <a name="module_dns_host_name"></a> [dns\_host\_name](#module\_dns\_host\_name) | git::https://github.com/cloudposse/terraform-aws-route53-cluster-hostname.git | 0.13.0 |
 | <a name="module_final_snapshot_label"></a> [final\_snapshot\_label](#module\_final\_snapshot\_label) | git::https://github.com/cloudposse/terraform-null-label.git | tags/0.3.3 |
 | <a name="module_label"></a> [label](#module\_label) | git::https://github.com/cloudposse/terraform-null-label.git | tags/0.3.3 |
 
