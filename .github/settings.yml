@@ -5,3 +5,4 @@ repository:
   description: Terraform module that provisions an RDS replica
   homepage: https://cloudposse.com/accelerate
   topics: rds, terraform, terraform-modue, aurora, mysql, postgres, slave, replica, readonly
+
