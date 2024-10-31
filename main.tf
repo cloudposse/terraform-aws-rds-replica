@@ -1,5 +1,5 @@
 module "label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.3.3"
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.25.0"
   enabled    = var.enabled
   namespace  = var.namespace
   name       = var.name
@@ -10,13 +10,13 @@ module "label" {
 }
 
 module "final_snapshot_label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.3.3"
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.25.0"
   enabled    = var.enabled
   namespace  = var.namespace
   name       = var.name
   stage      = var.stage
   delimiter  = var.delimiter
-  attributes = ["${compact(concat(var.attributes, list("final", "snapshot")))}"]
+  attributes = compact(concat(var.attributes, tolist(["final", "snapshot"])))
   tags       = var.tags
 }
 
@@ -31,7 +31,7 @@ resource "aws_kms_key" "default" {
 locals {
   enabled                   = var.enabled == "true"
   final_snapshot_identifier = length(var.final_snapshot_identifier) > 0 ? var.final_snapshot_identifier : module.final_snapshot_label.id
-  kms_key_id                = length(var.kms_key_id) > 0 ? var.kms_key_id : join("", aws_kms_key.default.*.arn)
+  kms_key_id                = length(var.kms_key_id) > 0 ? var.kms_key_id : join("", aws_kms_key.default[*].arn)
 }
 
 resource "aws_db_instance" "default" {
@@ -40,8 +40,8 @@ resource "aws_db_instance" "default" {
   port                        = var.database_port
   instance_class              = var.instance_class
   storage_encrypted           = var.storage_encrypted
-  vpc_security_group_ids      = ["${aws_security_group.default.*.id}"]
-  db_subnet_group_name        = join("", aws_db_subnet_group.default.*.name)
+  vpc_security_group_ids      = [aws_security_group.default[*].id]
+  db_subnet_group_name        = join("", aws_db_subnet_group.default[*].name)
   multi_az                    = var.multi_az
   storage_type                = var.storage_type
   iops                        = var.iops
@@ -65,7 +65,7 @@ resource "aws_db_instance" "default" {
 resource "aws_db_subnet_group" "default" {
   count      = local.enabled && var.same_region == "false" ? 1 : 0
   name       = module.label.id
-  subnet_ids = ["${var.subnet_ids}"]
+  subnet_ids = var.subnet_ids
   tags       = module.label.tags
 }
 
@@ -79,7 +79,7 @@ resource "aws_security_group" "default" {
 }
 
 locals {
-  security_group_id = join("", aws_security_group.default.*.id)
+  security_group_id = join("", aws_security_group.default[*].id)
 }
 
 resource "aws_security_group_rule" "allow_ingress" {
@@ -103,11 +103,11 @@ resource "aws_security_group_rule" "allow_egress" {
 }
 
 module "dns_host_name" {
-  source    = "git::https://github.com/cloudposse/terraform-aws-route53-cluster-hostname.git?ref=tags/0.2.5"
+  source    = "git::https://github.com/cloudposse/terraform-aws-route53-cluster-hostname.git?ref=tags/0.13.0"
   enabled   = local.enabled && length(var.dns_zone_id) > 0 ? "true" : "false"
   namespace = var.namespace
   name      = var.host_name
   stage     = var.stage
   zone_id   = var.dns_zone_id
-  records   = aws_db_instance.default.*.address
+  records   = aws_db_instance.default[*].address
 }
