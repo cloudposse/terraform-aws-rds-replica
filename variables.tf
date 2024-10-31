@@ -16,6 +16,7 @@ variable "stage" {
 variable "enabled" {
   description = "Set to false to prevent the module from creating any resources"
   default     = "true"
+  type        = bool
 }
 
 variable "dns_zone_id" {
@@ -38,6 +39,7 @@ variable "security_group_ids" {
 
 variable "database_port" {
   description = "Database port (_e.g._ `3306` for `MySQL`). Used in the DB Security Group to allow access to the DB instance from the provided `security_group_ids`"
+  type        = string
 }
 
 variable "multi_az" {
@@ -61,6 +63,7 @@ variable "storage_encrypted" {
 variable "iops" {
   description = "The amount of provisioned IOPS. Setting this implies a storage_type of 'io1'. Default is 0 if rds storage type is not 'io1'"
   default     = "0"
+  type        = string
 }
 
 variable "instance_class" {
@@ -125,6 +128,7 @@ variable "copy_tags_to_snapshot" {
 variable "backup_retention_period" {
   description = "Backup retention period in days. Must be > 0 to enable backups"
   default     = 0
+  type        = string
 }
 
 variable "backup_window" {
@@ -183,14 +187,17 @@ variable "kms_key_id" {
 
 variable "replicate_source_db" {
   description = "Specifies that this resource is a Replicate database, and to use this value as the source database. This correlates to the identifier of another Amazon RDS Database to replicate. Note that if you are creating a cross-region replica of an encrypted database you will also need to specify a kms_key_id. See [DB Instance Replication](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Replication.html) and [Working with PostgreSQL and MySQL Read Replicas](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html) for more information on using Replication."
+  type        = string
 }
 
 variable "monitoring_interval" {
   description = "The interval, in seconds, between points when Enhanced Monitoring metrics are collected for the DB instance. To disable collecting Enhanced Monitoring metrics, specify 0. Valid Values are 0, 1, 5, 10, 15, 30, 60."
   default     = "0"
+  type        = string
 }
 
 variable "same_region" {
   description = "Whether this replica is in the same region as the master."
   default     = "false"
+  type        = string
 }
